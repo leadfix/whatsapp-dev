@@ -27,6 +27,9 @@ COPY --from=frontend /app/dist dist
 RUN go build -ldflags "-X main.buildSHA=${BUILD_SHA:-dev}" -o /usr/bin/app && \
     rm -rf go main.go go.mod go.sum dist
 
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 1090/tcp
 
-CMD ["/usr/bin/app"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
