@@ -19,6 +19,12 @@ Replace `https://graph.facebook.com` with an instance of WhatsApp-Dev `http://lo
 
 ## Docker setup and run
 
+Images are published to GitHub Container Registry (`ghcr.io/<owner>/<repo>`) on every push to `main` and on git tags. Pull with:
+
+```sh
+docker pull ghcr.io/<owner>/whatsapp-dev:latest
+```
+
 ```sh
 # IMPORTANT! If you don't do this, docker will create a folder instead of a file
 touch db.sqlite
