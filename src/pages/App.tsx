@@ -6,6 +6,8 @@ import { Test } from "@/components/test/test"
 import { State, useConversationsStore } from "@/services/state"
 import { EventsWebsocket } from "@/services/websocket"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { logout } from "@/services/auth"
 
 type TabId = "conversations" | "templates" | "examples"
 
@@ -15,7 +17,12 @@ const tabs: Array<{ id: TabId; label: string }> = [
 	{ id: "examples", label: "API Examples" },
 ]
 
-export function App() {
+export interface AppProps {
+	showLogout?: boolean
+	onLogout?: () => void
+}
+
+export function App({ showLogout = false, onLogout }: AppProps) {
 	const [state, setState] = useState<State>({
 		graphToken: "",
 		appSecret: "",
@@ -24,6 +31,7 @@ export function App() {
 		webhookURL: "",
 	})
 	const [activeTab, setActiveTab] = useState<TabId>("conversations")
+	const [isLoggingOut, setIsLoggingOut] = useState(false)
 
 	const getData = async () => {
 		const stateResponse = await fetch("/api/info")
@@ -33,6 +41,17 @@ export function App() {
 	useEffect(() => {
 		getData()
 	}, [])
+
+	const handleLogout = async () => {
+		if (!onLogout || isLoggingOut) return
+		setIsLoggingOut(true)
+		try {
+			await logout()
+			onLogout()
+		} finally {
+			setIsLoggingOut(false)
+		}
+	}
 
 	return (
 		<div min-h-screen bg-zinc-950 text-zinc-100>
@@ -59,6 +78,16 @@ export function App() {
 						</span>
 					</p>
 				</div>
+				{showLogout ? (
+					<Button
+						type="button"
+						variant="outline"
+						onClick={handleLogout}
+						disabled={isLoggingOut}
+					>
+						{isLoggingOut ? "Signing out..." : "Sign out"}
+					</Button>
+				) : undefined}
 			</div>
 
 			<nav

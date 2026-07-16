@@ -2,14 +2,16 @@ package src
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/mjarkk/whatsapp-dev/go/controller/auth"
 	"github.com/mjarkk/whatsapp-dev/go/controller/conversations"
 	"github.com/mjarkk/whatsapp-dev/go/controller/templates"
 	"github.com/mjarkk/whatsapp-dev/go/controller/webhooks"
 	"github.com/mjarkk/whatsapp-dev/go/controller/websocket"
+	"github.com/mjarkk/whatsapp-dev/go/lib/session"
 	"github.com/mjarkk/whatsapp-dev/go/state"
 )
 
-func apiRoutes(r fiber.Router) {
+func apiRoutes(r fiber.Router, sessions *session.Manager) {
 	r.Use(func(c *fiber.Ctx) error {
 		err := c.Next()
 		if err == nil {
@@ -21,9 +23,16 @@ func apiRoutes(r fiber.Router) {
 		})
 	})
 
-	r.Get("/events", websocket.EventsRoute)
+	authCtrl := &auth.Controller{Sessions: sessions}
+	r.Get("/auth/status", authCtrl.Status)
+	r.Post("/auth/login", authCtrl.Login)
+	r.Post("/auth/logout", authCtrl.Logout)
 
-	r.Get("/info", func(c *fiber.Ctx) error {
+	protected := r.Group("", sessions.Middleware())
+
+	protected.Get("/events", websocket.EventsRoute)
+
+	protected.Get("/info", func(c *fiber.Ctx) error {
 		return c.JSON(struct {
 			GraphToken         string `json:"graphToken"`
 			AppSecret          string `json:"appSecret"`
@@ -41,16 +50,16 @@ func apiRoutes(r fiber.Router) {
 		})
 	})
 
-	r.Get("/conversations", conversations.Index)
-	r.Post("/conversations", conversations.Create)
-	r.Post("/conversations/:id", conversations.CreateMessage)
-	r.Post("/conversations/:id/btnQuickReply/:btnId", conversations.BtnQuickReply)
-	r.Delete("/conversations/:id", conversations.Clear)
+	protected.Get("/conversations", conversations.Index)
+	protected.Post("/conversations", conversations.Create)
+	protected.Post("/conversations/:id", conversations.CreateMessage)
+	protected.Post("/conversations/:id/btnQuickReply/:btnId", conversations.BtnQuickReply)
+	protected.Delete("/conversations/:id", conversations.Clear)
 
-	r.Get("/templates", templates.Index)
-	r.Post("/templates", templates.Create)
-	r.Patch("/templates/:id", templates.Update)
-	r.Delete("/templates/:id", templates.Delete)
+	protected.Get("/templates", templates.Index)
+	protected.Post("/templates", templates.Create)
+	protected.Patch("/templates/:id", templates.Update)
+	protected.Delete("/templates/:id", templates.Delete)
 
-	r.Post("/webhook/test", webhooks.Test)
+	protected.Post("/webhook/test", webhooks.Test)
 }

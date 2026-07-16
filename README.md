@@ -46,6 +46,8 @@ Now visit http://localhost:1090 to see whatsapp-dev
 | HTTP address                  | `--http-addr` `-a`            | `HTTP_ADDR`                | `:3000`                           |
 | HTTP server username          | `--http-username` `-u`        | `HTTP_USERNAME`            | _No auth required if not defined_ |
 | HTTP server password          | `--http-password` `-p`        | `HTTP_PASSWORD`            | _No auth required if not defined_ |
+
+When `HTTP_USERNAME` / `HTTP_PASSWORD` (or the matching flags) are set, the UI shows a login page and protects `/api/*` so staging conversation data is not publicly exposed. Mock Graph API routes stay available with the Facebook graph token as usual.
 | Mocked phone number           | `--whatsapp-phone-number`     | `WHATSAPP_PHONE_NUMBER`    | _Randomly generated_              |
 | Mocked phone number id        | `--whatsapp-phone-number-id`  | `WHATSAPP_PHONE_NUMBER_ID` | _Randomly generated_              |
 | Facebook Graph token          | `--facebook-graph-token`      | `FACEBOOK_GRAPH_TOKEN`     | _Randomly generated_              |

@@ -8,11 +8,11 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/mjarkk/whatsapp-dev/go/lib/session"
 )
 
 // ErrorResponse is the response send by the server when an error occurs
@@ -35,31 +35,30 @@ func StartWebserver(opts StartWebserverOptions) {
 		DisableStartupMessage: true,
 	})
 
-	authMiddleware := func(c *fiber.Ctx) error {
-		return c.Next()
-	}
-
-	if opts.BasicAuthUsername != "" || opts.BasicAuthPassword != "" {
-		authMiddleware = basicauth.New(basicauth.Config{
-			Users: map[string]string{
-				opts.BasicAuthUsername: opts.BasicAuthPassword,
-			},
-		})
-	}
+	sessions := session.New(opts.BasicAuthUsername, opts.BasicAuthPassword)
 
 	app.Use(compress.New())
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "http://localhost:3001,http://127.0.0.1:3001",
+		AllowCredentials: true,
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowMethods:     "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+	}))
 	app.Use(logger.New())
 
-	apiRoutes(app.Group("/api", authMiddleware))
+	apiRoutes(app.Group("/api"), sessions)
 	mockRoutes(app.Group(""))
 
-	app.Group("", authMiddleware, filesystem.New(filesystem.Config{
+	// SPA stays public so the login page can load; API routes enforce auth.
+	app.Group("", filesystem.New(filesystem.Config{
 		PathPrefix: "dist",
 		Index:      "index.html",
 		Root:       http.FS(opts.Dist),
 	}))
 
 	fmt.Println("Running Web server at", opts.Addr)
+	if sessions.Enabled() {
+		fmt.Println("HTTP auth enabled: UI requires login when HTTP_USERNAME/HTTP_PASSWORD are set")
+	}
 	log.Fatal(app.Listen(opts.Addr))
 }

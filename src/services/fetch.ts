@@ -1,10 +1,6 @@
 import { toast } from "sonner"
 
 export function getUrl(path: string, isWebsocket = false) {
-	if (import.meta.env.DEV) {
-		return `${isWebsocket ? "ws" : "http"}://localhost:1090${path}`
-	}
-
 	if (isWebsocket) {
 		const protocol = location.protocol === "https:" ? "wss://" : "ws://"
 		return protocol + location.host + path
@@ -14,7 +10,14 @@ export function getUrl(path: string, isWebsocket = false) {
 }
 
 export async function fetch(path: string, options?: RequestInit) {
-	const response = await window.fetch(getUrl(path), options)
+	const response = await window.fetch(getUrl(path), {
+		credentials: "include",
+		...options,
+	})
+	if (response.status === 401) {
+		window.dispatchEvent(new CustomEvent("whatsapp-dev:unauthorized"))
+		throw new Error("unauthorized")
+	}
 	if (response.status >= 400) {
 		let errMsg = await response.text()
 		try {
