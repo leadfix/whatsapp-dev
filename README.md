@@ -54,7 +54,7 @@ Now visit http://localhost:1090 to see whatsapp-dev
 | ----------------------------- | ----------------------------- | ------------------------------------- | --------------------------------- |
 | webhook url (required)        | `--webhook-url` `-w`          | `WHATSAPP_DEV_WEBHOOK_URL`            |                                   |
 | webhook verify token          | `--webhook-verify-token` `-t` | `WHATSAPP_DEV_WEBHOOK_VERIFY_TOKEN`   | _Randomly generated_              |
-| Secrets seed                  | `--secrets-seed` `-s`         | `WHATSAPP_DEV_SECRETS_SEED`           | `fallback-secrets-seed`           |
+| Secrets seed                  | `--secrets-seed` `-s`         | `WHATSAPP_DEV_SECRETS_SEED`           | _Required_                        |
 | HTTP address                  | `--http-addr` `-a`            | `WHATSAPP_DEV_HTTP_ADDR`              | `:1090`                           |
 | HTTP server username          | `--http-username` `-u`        | `WHATSAPP_DEV_HTTP_USERNAME`          | _No auth required if not defined_ |
 | HTTP server password          | `--http-password` `-p`        | `WHATSAPP_DEV_HTTP_PASSWORD`          | _No auth required if not defined_ |

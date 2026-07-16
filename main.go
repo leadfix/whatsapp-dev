@@ -66,10 +66,7 @@ func main() {
 
 	secretesSeedValue := secretesSeed()
 	if secretesSeedValue == "" {
-		fmt.Println("DANGER: using fallback secrets seed")
-		fmt.Println("        not recommended when exposing this service to the internet")
-		fmt.Println("        use --secrets-seed or $WHATSAPP_DEV_SECRETS_SEED to set a custom seed")
-		secretesSeedValue = "fallback-secrets-seed"
+		panic("Secrets seed must be set using the --secrets-seed flag or the $WHATSAPP_DEV_SECRETS_SEED environment variable")
 	}
 
 	h := sha256.New()
