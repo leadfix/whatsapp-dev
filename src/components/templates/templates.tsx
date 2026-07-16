@@ -14,7 +14,6 @@ import { fetch, post } from "@/services/fetch"
 import { useEffect, useState, Fragment } from "react"
 import { DBModel, emptyDBModel } from "@/lib/types"
 import { TrashIcon } from "@radix-ui/react-icons"
-import { OpenCloseButton } from "../openCloseButton"
 import { Textarea } from "@/components/ui/textarea"
 
 interface Template extends DBModel {
@@ -31,7 +30,6 @@ interface TemplateCustomButton extends DBModel {
 }
 
 export function Templates() {
-	const [open, setOpen] = useState(false)
 	const [templates, setTemplates] = useState<Array<Template>>()
 	const [newTemplateOpen, setNewTemplateOpen] = useState(false)
 
@@ -77,15 +75,15 @@ export function Templates() {
 
 	return (
 		<>
-			<h2 m-6 mb-0 flex flex-wrap gap-4 justify-between items-center>
-				<span inline-flex items-center>
-					<OpenCloseButton open={open} setOpen={setOpen} /> Message templates
-				</span>
+			<div mb-4 flex flex-wrap gap-4 justify-between items-center>
+				<p m-0 text-zinc-400 text-sm>
+					Manage message templates available to the mock Graph API.
+				</p>
 				<Button onClick={() => setNewTemplateOpen(true)}>New template</Button>
-			</h2>
+			</div>
 
-			{templates && open ? (
-				<div flex flex-wrap gap-4 p-4>
+			{templates ? (
+				<div flex flex-wrap gap-4>
 					{templates.map((template, idx) => (
 						<Template
 							template={template}
