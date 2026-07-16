@@ -50,20 +50,20 @@ Now visit http://localhost:1090 to see whatsapp-dev
 
 ## Options:
 
-| name                          | flag                          | env                        | default                           |
-| ----------------------------- | ----------------------------- | -------------------------- | --------------------------------- |
-| webhook url (required)        | `--webhook-url` `-w`          | `WEBHOOK_URL`              |                                   |
-| webhook verify token          | `--webhook-verify-token` `-t` | `WEBHOOK_VERIFY_TOKEN`     | _Randomly generated_              |
-| Secrets seed                  | `--secrets-seed` `-s`         | `SECRETS_SEED`             | `fallback-secrets-seed`           |
-| HTTP address                  | `--http-addr` `-a`            | `HTTP_ADDR`                | `:3000`                           |
-| HTTP server username          | `--http-username` `-u`        | `HTTP_USERNAME`            | _No auth required if not defined_ |
-| HTTP server password          | `--http-password` `-p`        | `HTTP_PASSWORD`            | _No auth required if not defined_ |
+| name                          | flag                          | env                                   | default                           |
+| ----------------------------- | ----------------------------- | ------------------------------------- | --------------------------------- |
+| webhook url (required)        | `--webhook-url` `-w`          | `WHATSAPP_DEV_WEBHOOK_URL`            |                                   |
+| webhook verify token          | `--webhook-verify-token` `-t` | `WHATSAPP_DEV_WEBHOOK_VERIFY_TOKEN`   | _Randomly generated_              |
+| Secrets seed                  | `--secrets-seed` `-s`         | `WHATSAPP_DEV_SECRETS_SEED`           | `fallback-secrets-seed`           |
+| HTTP address                  | `--http-addr` `-a`            | `WHATSAPP_DEV_HTTP_ADDR`              | `:1090`                           |
+| HTTP server username          | `--http-username` `-u`        | `WHATSAPP_DEV_HTTP_USERNAME`          | _No auth required if not defined_ |
+| HTTP server password          | `--http-password` `-p`        | `WHATSAPP_DEV_HTTP_PASSWORD`          | _No auth required if not defined_ |
 
-When `HTTP_USERNAME` / `HTTP_PASSWORD` (or the matching flags) are set, the UI shows a login page and protects `/api/*` so staging conversation data is not publicly exposed. Mock Graph API routes stay available with the Facebook graph token as usual.
-| Mocked phone number           | `--whatsapp-phone-number`     | `WHATSAPP_PHONE_NUMBER`    | _Randomly generated_              |
-| Mocked phone number id        | `--whatsapp-phone-number-id`  | `WHATSAPP_PHONE_NUMBER_ID` | _Randomly generated_              |
-| Facebook Graph token          | `--facebook-graph-token`      | `FACEBOOK_GRAPH_TOKEN`     | _Randomly generated_              |
-| Facebook developer app secret | `--facebook-app-secret`       | `FACEBOOK_APP_SECRET`      | _Randomly generated_              |
+When `WHATSAPP_DEV_HTTP_USERNAME` / `WHATSAPP_DEV_HTTP_PASSWORD` (or the matching flags) are set, the UI shows a login page and protects `/api/*` so staging conversation data is not publicly exposed. Mock Graph API routes stay available with the graph token as usual.
+| Mocked phone number           | `--whatsapp-phone-number`     | `WHATSAPP_DEV_PHONE_NUMBER`           | _Randomly generated_              |
+| Mocked phone number id        | `--whatsapp-phone-number-id`  | `WHATSAPP_DEV_PHONE_NUMBER_ID`        | _Randomly generated_              |
+| Facebook Graph token          | `--facebook-graph-token`      | `WHATSAPP_DEV_GRAPH_TOKEN`            | _Randomly generated_              |
+| Facebook developer app secret | `--facebook-app-secret`       | `WHATSAPP_DEV_APP_SECRET`             | _Randomly generated_              |
 
 _Note that all randomly generated values are generated using the secrets seed. If you don't change your seed, all randomly generated values will stay the same when restarting the service_
 

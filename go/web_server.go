@@ -58,7 +58,7 @@ func StartWebserver(opts StartWebserverOptions) {
 
 	fmt.Println("Running Web server at", opts.Addr)
 	if sessions.Enabled() {
-		fmt.Println("HTTP auth enabled: UI requires login when HTTP_USERNAME/HTTP_PASSWORD are set")
+		fmt.Println("HTTP auth enabled: UI requires login when WHATSAPP_DEV_HTTP_USERNAME/WHATSAPP_DEV_HTTP_PASSWORD are set")
 	}
 	log.Fatal(app.Listen(opts.Addr))
 }

@@ -42,22 +42,22 @@ func argOrEnv(flagLong, flagShort, envKey, defaultValue, description string) Arg
 func main() {
 	defaultHttpAddr := ":1090"
 
-	webHookURL := argOrEnv("webhook-url", "w", "WEBHOOK_URL", "", "Webhook URL")
-	webHookVerivyToken := argOrEnv("webhook-verify-token", "t", "WEBHOOK_VERIFY_TOKEN", "", "Webhook verify token")
-	secretesSeed := argOrEnv("secrets-seed", "s", "SECRETS_SEED", "", "Secrets seed for generating a random graph-token")
-	httpAddr := argOrEnv("http-addr", "a", "HTTP_ADDR", defaultHttpAddr, "HTTP address")
-	httpUsername := argOrEnv("http-username", "u", "HTTP_USERNAME", "", "HTTP username")
-	httpPassword := argOrEnv("http-password", "p", "HTTP_PASSWORD", "", "HTTP password")
-	phoneNumber := argOrEnv("whatsapp-phone-number", "", "WHATSAPP_PHONE_NUMBER", "", "Define the mocked phone number")
-	phoneNumberID := argOrEnv("whatsapp-phone-number-id", "", "WHATSAPP_PHONE_NUMBER_ID", "", "Define the mocked phone number id")
-	graphToken := argOrEnv("facebook-graph-token", "", "FACEBOOK_GRAPH_TOKEN", "", "Define mock graph token")
-	appSecret := argOrEnv("facebook-app-secret", "", "FACEBOOK_APP_SECRET", "", "Define the Facebook app secret")
+	webHookURL := argOrEnv("webhook-url", "w", "WHATSAPP_DEV_WEBHOOK_URL", "", "Webhook URL")
+	webHookVerivyToken := argOrEnv("webhook-verify-token", "t", "WHATSAPP_DEV_WEBHOOK_VERIFY_TOKEN", "", "Webhook verify token")
+	secretesSeed := argOrEnv("secrets-seed", "s", "WHATSAPP_DEV_SECRETS_SEED", "", "Secrets seed for generating a random graph-token")
+	httpAddr := argOrEnv("http-addr", "a", "WHATSAPP_DEV_HTTP_ADDR", defaultHttpAddr, "HTTP address")
+	httpUsername := argOrEnv("http-username", "u", "WHATSAPP_DEV_HTTP_USERNAME", "", "HTTP username")
+	httpPassword := argOrEnv("http-password", "p", "WHATSAPP_DEV_HTTP_PASSWORD", "", "HTTP password")
+	phoneNumber := argOrEnv("whatsapp-phone-number", "", "WHATSAPP_DEV_PHONE_NUMBER", "", "Define the mocked phone number")
+	phoneNumberID := argOrEnv("whatsapp-phone-number-id", "", "WHATSAPP_DEV_PHONE_NUMBER_ID", "", "Define the mocked phone number id")
+	graphToken := argOrEnv("facebook-graph-token", "", "WHATSAPP_DEV_GRAPH_TOKEN", "", "Define mock graph token")
+	appSecret := argOrEnv("facebook-app-secret", "", "WHATSAPP_DEV_APP_SECRET", "", "Define the Facebook app secret")
 
 	pflag.Parse()
 
 	webHookURLValue := webHookURL()
 	if webHookURLValue == "" {
-		panic("Webhook url must be set using the --webhook-url flag or the $WEBHOOK_URL environment variable")
+		panic("Webhook url must be set using the --webhook-url flag or the $WHATSAPP_DEV_WEBHOOK_URL environment variable")
 	}
 	_, err := url.Parse(webHookURLValue)
 	if err != nil {
@@ -68,7 +68,7 @@ func main() {
 	if secretesSeedValue == "" {
 		fmt.Println("DANGER: using fallback secrets seed")
 		fmt.Println("        not recommended when exposing this service to the internet")
-		fmt.Println("        use --secrets-seed or $SECRETS_SEED to set a custom seed")
+		fmt.Println("        use --secrets-seed or $WHATSAPP_DEV_SECRETS_SEED to set a custom seed")
 		secretesSeedValue = "fallback-secrets-seed"
 	}
 
