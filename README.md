@@ -19,10 +19,16 @@ Replace `https://graph.facebook.com` with an instance of WhatsApp-Dev `http://lo
 
 ## Docker setup and run
 
-Images are published to GitHub Container Registry (`ghcr.io/<owner>/<repo>`) on every push to `main` and on git tags. Pull with:
+Images are published to GitHub Container Registry on every push to `main` and on git tags:
 
 ```sh
-docker pull ghcr.io/<owner>/whatsapp-dev:latest
+docker pull ghcr.io/leadfix/whatsapp-dev:latest
+```
+
+If the package is private, authenticate first:
+
+```sh
+echo YOUR_GITHUB_PAT | docker login ghcr.io -u leadfix --password-stdin
 ```
 
 ```sh
@@ -34,7 +40,7 @@ docker run \
   --rm \
   -p 1090:1090 \
   -v `pwd`/db.sqlite:/usr/src/app/db.sqlite \
-  ghcr.io/mjarkk/whatsapp-dev:latest \
+  ghcr.io/leadfix/whatsapp-dev:latest \
   app --webhook-url http://your-app-webhook.local:8080/api/webhook
 ```
 
