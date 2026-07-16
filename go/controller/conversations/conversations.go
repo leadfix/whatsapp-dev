@@ -153,3 +153,27 @@ func BtnQuickReply(c *fiber.Ctx) error {
 
 	return c.JSON(conversation)
 }
+
+func Clear(c *fiber.Ctx) error {
+	conversation, err := getConversationFromParam(c)
+	if err != nil {
+		return err
+	}
+
+	err = DB.Where("conversation_id = ?", conversation.ID).Delete(&models.MessageButton{}).Error
+	if err != nil {
+		return err
+	}
+
+	err = DB.Where("conversation_id = ?", conversation.ID).Delete(&models.Message{}).Error
+	if err != nil {
+		return err
+	}
+
+	err = DB.Delete(conversation).Error
+	if err != nil {
+		return err
+	}
+
+	return c.SendStatus(204)
+}

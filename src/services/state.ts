@@ -36,6 +36,7 @@ interface ConversationsState {
 	setConversations: (conversations: Array<Conversation>) => void
 	newConversation: (conversation: Conversation) => void
 	updateConversation: (conversation: Conversation) => void
+	removeConversation: (conversationId: number) => void
 	addMessage: (message: Message) => void
 }
 
@@ -80,6 +81,14 @@ export const useConversationsStore = create<ConversationsState>((set) => ({
 				conversations,
 			}
 		})
+	},
+	removeConversation(conversationId) {
+		set((state) => ({
+			...state,
+			conversations: state.conversations.filter(
+				(conversation) => conversation.ID !== conversationId,
+			),
+		}))
 	},
 	addMessage(message) {
 		set((state) => {

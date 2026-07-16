@@ -1,16 +1,19 @@
 import { ShowMessage } from "./singleMessage"
 import { Input } from "@/components/ui/input"
-import { post } from "@/services/fetch"
+import { Button } from "@/components/ui/button"
+import { fetch, post } from "@/services/fetch"
 import { FormEvent, useEffect, useRef, useState } from "react"
 import { useConversationsStore, type Conversation } from "@/services/state"
+import { TrashIcon } from "@radix-ui/react-icons"
 
 export interface ConversationProps {
 	conversation: Conversation
 }
 
 export function Conversation(props: ConversationProps) {
-	const { updateConversation } = useConversationsStore()
+	const { updateConversation, removeConversation } = useConversationsStore()
 	const [msgCount, setMsgCount] = useState(0)
+	const [isClearing, setIsClearing] = useState(false)
 	const messagesEndRef = useRef<HTMLDivElement>(null)
 
 	const onSendMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -27,6 +30,27 @@ export function Conversation(props: ConversationProps) {
 			message,
 		})
 		updateConversation(await response.json())
+	}
+
+	const onClearConversation = async () => {
+		if (isClearing) return
+		if (
+			!window.confirm(
+				`Clear conversation with ${props.conversation.phoneNumber}? This cannot be undone.`,
+			)
+		) {
+			return
+		}
+
+		setIsClearing(true)
+		try {
+			await fetch(`/api/conversations/${props.conversation.ID}`, {
+				method: "DELETE",
+			})
+			removeConversation(props.conversation.ID)
+		} finally {
+			setIsClearing(false)
+		}
 	}
 
 	useEffect(() => {
@@ -58,8 +82,23 @@ export function Conversation(props: ConversationProps) {
 				border-b-2
 				border-zinc-700
 				text-zinc-200
+				flex
+				items-center
+				justify-between
+				gap-2
 			>
-				{props.conversation.phoneNumber}
+				<span>{props.conversation.phoneNumber}</span>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon"
+					onClick={onClearConversation}
+					disabled={isClearing}
+					title="Clear conversation"
+					aria-label="Clear conversation"
+				>
+					<TrashIcon />
+				</Button>
 			</h4>
 			<div h-130 overflow-y-auto>
 				<div flex flex-col justify-end>
