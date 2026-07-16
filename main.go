@@ -22,6 +22,8 @@ import (
 //go:embed dist
 var dist embed.FS
 
+var buildSHA = "dev"
+
 func getenv(key string) string {
 	return strings.TrimSpace(os.Getenv(key))
 }
@@ -54,6 +56,8 @@ func main() {
 	appSecret := argOrEnv("facebook-app-secret", "", "WHATSAPP_DEV_APP_SECRET", "", "Define the Facebook app secret")
 
 	pflag.Parse()
+
+	fmt.Println("whatsapp-dev build:", buildSHA)
 
 	webHookURLValue := webHookURL()
 	if webHookURLValue == "" {

@@ -13,6 +13,8 @@ RUN npm i && npm run build
 # Build the runtime container
 FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.21
 
+ARG BUILD_SHA=dev
+
 WORKDIR /usr/src/app
 
 COPY go.mod go.sum .
@@ -22,7 +24,7 @@ COPY go go
 COPY main.go .
 COPY --from=frontend /app/dist dist
 
-RUN go build -o /usr/bin/app && \
+RUN go build -ldflags "-X main.buildSHA=${BUILD_SHA:-dev}" -o /usr/bin/app && \
     rm -rf go main.go go.mod go.sum dist
 
 EXPOSE 1090/tcp
